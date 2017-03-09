@@ -1,0 +1,43 @@
+控制组件的两种数据:props 和 state：
+props是在父组件中指定，指定后再起生命周期内是不会再改变，（包含其中的字组件）。
+state是可以在其生命周期中改变的，state需要在Constructor中初始化。
+如例：
+	假如我们需要制作一段不停闪烁的文字。文字内容本身在组件创建时就已经指定好了，所以文字内容应该是一个prop。而文字的显示或隐藏的状态（快速的显隐切换就产生了闪烁的效果）则是随着时间变化的，因此这一状态应该写到state中。
+	
+	import React, { Component } from 'react';
+	import { AppRegistry, Text, View } from 'react-native';
+
+	class Blink extends Component {
+  	constructor(props) {
+    	super(props);
+    	this.state = { showText: true };
+
+    	// 每1000毫秒对showText状态做一次取反操作
+    	setInterval(() => {
+      	this.setState({ showText: !this.state.showText });
+    	}, 1000);
+  	}
+
+  	render() {
+    	// 根据当前showText的值决定是否显示text内容
+    	let display = this.state.showText ? this.props.text : ' ';
+    	return (
+      	<Text>{display}</Text>
+    	);
+  		}
+	}
+
+	class BlinkApp extends Component {
+  	render() {
+    	return (
+      	<View>
+        	<Blink text='I love to blink' />
+        	<Blink text='Yes blinking is so great' />
+        	<Blink text='Why did they ever take this out of HTML' />
+        	<Blink text='Look at me look at me look at me' />
+      	</View>
+    	);
+  	}
+	}
+
+	AppRegistry.registerComponent('BlinkApp', () => BlinkApp);
